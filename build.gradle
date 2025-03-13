@@ -1,0 +1,39 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.3'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// ✅ Lombok (자동 getter/setter)
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// ✅ Spring Boot Starter Web (REST API 개발)
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// ✅ Spring Security (BCryptPasswordEncoder 사용)
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// ✅ JPA & MySQL
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// ✅ Validation (회원가입 시 유효성 검사)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// ✅ 테스트
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
