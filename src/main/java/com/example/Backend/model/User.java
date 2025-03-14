@@ -22,5 +22,11 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private String nickname; // ✅ 닉네임 필드 추가
+
+    @Column
+    private String travelDestination; // ✅ 여행지 필드 추가
+
+    @Column
+    private String airline; // ✅ 항공사 필드 추가
 }

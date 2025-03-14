@@ -25,7 +25,11 @@ public class AuthController {
         try {
             String username = request.get("username");
             String password = request.get("password");
-            userService.registerUser(username, password);
+            String nickname = request.get("nickname");
+            String travelDestination = request.get("travelDestination");
+            String airline = request.get("airline");
+
+            userService.registerUser(username, password, nickname, travelDestination, airline);
             return ResponseEntity.ok("User registered successfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,7 +43,6 @@ public class AuthController {
 
         Optional<User> user = userService.findByUsername(username);
 
-        // ✅ 비밀번호를 해싱된 값과 비교하도록 수정!
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             return ResponseEntity.ok("Login successful!");
         }

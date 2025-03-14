@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -17,13 +18,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public org.springframework.security.web.SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (POST 요청 가능하게)
+                .csrf(csrf -> csrf.disable()) // 🔥 CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // 로그인 & 회원가입 허용
-                        .anyRequest().authenticated() // 다른 요청은 인증 필요
-                );
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // ✅ 회원가입 & 로그인 요청 허용
+                        .anyRequest().authenticated() // ❌ 그 외 요청은 인증 필요
+                )
+                .formLogin(form -> form.disable()) // 🔥 기본 로그인 폼 비활성화
+                .httpBasic(httpBasic -> httpBasic.disable()); // 🔥 HTTP Basic 인증 비활성화
 
         return http.build();
     }
