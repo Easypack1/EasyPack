@@ -1,32 +1,40 @@
 package com.example.Backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;  // 내부 식별용 PK
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId;  // 사용자 ID
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String nickname; // ✅ 닉네임 필드 추가
+    private String nickname;
 
-    @Column
-    private String travelDestination; // ✅ 여행지 필드 추가
+    @Column(name = "travel_destination", nullable = false)
+    private String travelDestination;
 
-    @Column
-    private String airline; // ✅ 항공사 필드 추가
+    @Column(nullable = false)
+    private String airline;
+
+    public User(String userId, String password, String nickname, String travelDestination, String airline) {
+        this.userId = userId;
+        this.password = password;
+        this.nickname = nickname;
+        this.travelDestination = travelDestination;
+        this.airline = airline;
+    }
 }
