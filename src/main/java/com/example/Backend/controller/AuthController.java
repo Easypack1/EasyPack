@@ -58,9 +58,15 @@ public class AuthController {
             @RequestHeader("Authorization") String token,
             @RequestBody UserUpdateRequest request
     ) {
-        String userId = jwtUtil.validateTokenAndGetUserId(token.replace("Bearer ", ""));
-        if (userId == null || !userId.equals(request.getUserId())) {
-            return ResponseEntity.status(403).body("권한 없음");
+        String userIdFromToken = jwtUtil.validateTokenAndGetUserId(token.replace("Bearer ", ""));
+        String userIdFromRequest = request.getUserId();
+
+        // ✅ 디버깅 로그 출력
+        System.out.println("🪪 userId from token: " + userIdFromToken);
+        System.out.println("📦 userId from request: " + userIdFromRequest);
+
+        if (userIdFromToken == null || !userIdFromToken.equals(userIdFromRequest)) {
+            return ResponseEntity.status(403).body("권한 없음: userId 불일치");
         }
 
         userService.updateUserInfo(request);
