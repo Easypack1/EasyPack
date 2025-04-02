@@ -25,7 +25,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // JWT에서 클레임 추출
+    // Claims 추출
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -34,18 +34,26 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // ✅ 추가: userId 추출
+    // userId 추출
     public String extractUserId(String token) {
         return extractClaims(token).getSubject();
     }
 
-    // JWT 유효성 검증
+    // 토큰 유효성 검사
     public boolean isTokenValid(String token) {
         try {
-            extractClaims(token); // 유효하지 않으면 예외 발생
+            extractClaims(token); // 예외 발생 시 유효하지 않음
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    // ✅ [추가] 토큰 검증 및 userId 반환
+    public String validateTokenAndGetUserId(String token) {
+        if (!isTokenValid(token)) {
+            throw new RuntimeException("유효하지 않은 토큰입니다.");
+        }
+        return extractUserId(token);
     }
 }
