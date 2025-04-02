@@ -2,6 +2,7 @@ package com.example.Backend.controller;
 
 import com.example.Backend.model.User;
 import com.example.Backend.service.UserService;
+import com.example.Backend.model.UserUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,11 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("회원가입 실패: " + e.getMessage());
         }
+    }
+    @PutMapping("/user/update")
+    public ResponseEntity<?> updateUserInfo(@RequestBody UserUpdateRequest request) {
+        userService.updateUserInfo(request);
+        return ResponseEntity.ok("User info updated successfully");
     }
 
     @PostMapping("/login")

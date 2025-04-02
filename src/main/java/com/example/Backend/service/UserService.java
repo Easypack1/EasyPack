@@ -1,6 +1,7 @@
 package com.example.Backend.service;
 
 import com.example.Backend.model.User;
+import com.example.Backend.model.UserUpdateRequest;
 import com.example.Backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // 회원가입
     public User register(String userId, String password, String nickname, String travelDestination, String airline) {
         if (userRepository.findByUserId(userId).isPresent()) {
             throw new RuntimeException("이미 존재하는 사용자 ID입니다.");
@@ -29,6 +31,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // 로그인
     public User authenticate(String userId, String password) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isEmpty()) {
@@ -41,5 +44,26 @@ public class UserService {
         }
 
         return user;
+    }
+
+    // 🔧 회원정보 수정 기능
+    public void updateUserInfo(UserUpdateRequest request) {
+        User user = userRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (request.getNickname() != null) {
+            user.setNickname(request.getNickname());
+        }
+        if (request.getTravelDestination() != null) {
+            user.setTravelDestination(request.getTravelDestination());
+        }
+        if (request.getAirline() != null) {
+            user.setAirline(request.getAirline());
+        }
+
+        userRepository.save(user);
     }
 }
