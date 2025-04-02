@@ -10,27 +10,42 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "easypacksecrettokeneasypacksecrettoken";  // ✅ 길고 안전하게
-    private static final long EXPIRATION_TIME = 86400000; // 1일
+    private static final String SECRET_KEY = "EasyPackSecretKeyEasyPackSecretKeyEasyPackSecretKey123!";
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); // Base64 인코딩 불필요
-    }
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
+    // JWT 생성
     public String generateToken(String userId) {
         return Jwts.builder()
                 .setSubject(userId)
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String validateTokenAndGetUserId(String token) {
+    // JWT에서 클레임 추출
+    public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+    }
+
+    // ✅ 추가: userId 추출
+    public String extractUserId(String token) {
+        return extractClaims(token).getSubject();
+    }
+
+    // JWT 유효성 검증
+    public boolean isTokenValid(String token) {
+        try {
+            extractClaims(token); // 유효하지 않으면 예외 발생
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }
