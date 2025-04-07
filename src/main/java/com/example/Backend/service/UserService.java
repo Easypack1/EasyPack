@@ -46,6 +46,12 @@ public class UserService {
         return user;
     }
 
+    // 회원정보 조회
+    public User findByUserId(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
     // 🔧 회원정보 수정 기능
     public void updateUserInfo(UserUpdateRequest request) {
         User user = userRepository.findByUserId(request.getUserId())
