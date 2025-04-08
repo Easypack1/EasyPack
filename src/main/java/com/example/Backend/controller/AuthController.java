@@ -2,6 +2,7 @@ package com.example.Backend.controller;
 
 import com.example.Backend.config.JwtUtil;
 import com.example.Backend.model.User;
+import com.example.Backend.model.UserResponseDTO;
 import com.example.Backend.model.UserUpdateRequest;
 import com.example.Backend.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,23 @@ public class AuthController {
             return ResponseEntity.badRequest().body("로그인 실패: " + e.getMessage());
         }
     }
+
+    // 회원정보 조회
+    @GetMapping("/user/me")
+    public ResponseEntity<?> getMyInfo(@RequestHeader("Authorization") String token) {
+        String userId = jwtUtil.validateTokenAndGetUserId(token.replace("Bearer ", ""));
+        User user = userService.findByUserId(userId);
+
+        UserResponseDTO dto = new UserResponseDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getTravelDestination(),
+                user.getAirline()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
 
     @PutMapping("/user/update")
     public ResponseEntity<?> updateUserInfo(
