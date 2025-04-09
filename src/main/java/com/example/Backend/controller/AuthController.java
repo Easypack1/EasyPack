@@ -70,24 +70,19 @@ public class AuthController {
         return ResponseEntity.ok(dto);
     }
 
-
+    // 회원정보 수정 (닉네임, 항공사, 나라만)
     @PutMapping("/user/update")
     public ResponseEntity<?> updateUserInfo(
             @RequestHeader("Authorization") String token,
             @RequestBody UserUpdateRequest request
     ) {
         String userIdFromToken = jwtUtil.validateTokenAndGetUserId(token.replace("Bearer ", ""));
-        String userIdFromRequest = request.getUserId();
 
-        // ✅ 디버깅 로그 출력
-        System.out.println("🪪 userId from token: " + userIdFromToken);
-        System.out.println("📦 userId from request: " + userIdFromRequest);
-
-        if (userIdFromToken == null || !userIdFromToken.equals(userIdFromRequest)) {
-            return ResponseEntity.status(403).body("권한 없음: userId 불일치");
+        if (userIdFromToken == null) {
+            return ResponseEntity.status(403).body("권한 없음: 유효하지 않은 토큰");
         }
 
-        userService.updateUserInfo(request);
+        userService.updateUserInfo(userIdFromToken, request);
         return ResponseEntity.ok("User info updated successfully");
     }
 }
