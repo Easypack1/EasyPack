@@ -1,9 +1,11 @@
 package com.example.Backend.config;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -13,7 +15,12 @@ public class JwtUtil {
     private static final String SECRET_KEY = "EasyPackSecretKeyEasyPackSecretKeyEasyPackSecretKey123!";
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+
+    private final JwtParser parser = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .deserializeJsonWith(new JacksonSerializer<>())  // ✅ 직렬화기 명시적으로 지정
+            .build();
 
     // JWT 생성
     public String generateToken(String userId) {
@@ -27,11 +34,7 @@ public class JwtUtil {
 
     // Claims 추출
     public Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return parser.parseClaimsJws(token).getBody();
     }
 
     // userId 추출
@@ -49,7 +52,7 @@ public class JwtUtil {
         }
     }
 
-    // ✅ [추가] 토큰 검증 및 userId 반환
+    // 토큰 검증 및 userId 반환
     public String validateTokenAndGetUserId(String token) {
         if (!isTokenValid(token)) {
             throw new RuntimeException("유효하지 않은 토큰입니다.");
