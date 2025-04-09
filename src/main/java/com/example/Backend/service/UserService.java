@@ -53,8 +53,8 @@ public class UserService {
     }
 
     // 🔧 회원정보 수정 기능
-    public void updateUserInfo(UserUpdateRequest request) {
-        User user = userRepository.findByUserId(request.getUserId())
+    public void updateUserInfo(String userId, UserUpdateRequest request) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         if (request.getNickname() != null) {
