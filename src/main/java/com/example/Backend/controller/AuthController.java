@@ -82,7 +82,18 @@ public class AuthController {
             return ResponseEntity.status(403).body("권한 없음: 유효하지 않은 토큰");
         }
 
+        // 수정 반영
         userService.updateUserInfo(userIdFromToken, request);
-        return ResponseEntity.ok("User info updated successfully");
+
+        // 수정된 사용자 정보 재조회
+        User updatedUser = userService.findByUserId(userIdFromToken);
+        UserResponseDTO dto = new UserResponseDTO(
+                updatedUser.getUserId(),
+                updatedUser.getNickname(),
+                updatedUser.getTravelDestination(),
+                updatedUser.getAirline()
+        );
+
+        return ResponseEntity.ok(dto); // 수정된 정보를 그대로 응답
     }
 }
