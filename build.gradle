@@ -2,6 +2,9 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.3'
+
+	// ✅ ShadowJar 플러그인 추가
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'com.example'
@@ -13,26 +16,21 @@ repositories {
 }
 
 dependencies {
+	// ✅ JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 직렬화를 위한 Jackson
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
-	// ✅ Lombok (자동 getter/setter)
+
+	// ✅ Spring & 기타 의존성
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// ✅ Spring Boot Starter Web (REST API 개발)
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	// ✅ Spring Security (BCryptPasswordEncoder 사용)
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	// ✅ JPA & MySQL
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java:8.0.33'
-
-	// ✅ Validation (회원가입 시 유효성 검사)
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// ✅ 테스트
@@ -41,4 +39,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// ✅ Spring Boot의 기본 bootJar 비활성화 (shadowJar만 사용)
+bootJar {
+	enabled = false
+}
+
+// ✅ shadowJar 설정: META-INF/services 병합
+shadowJar {
+	mergeServiceFiles()
 }
