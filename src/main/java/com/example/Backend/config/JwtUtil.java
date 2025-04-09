@@ -1,13 +1,18 @@
 package com.example.Backend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.JacksonDeserializer;
 import io.jsonwebtoken.io.JacksonSerializer;
+import io.jsonwebtoken.io.Serializer;
+import io.jsonwebtoken.io.Deserializer;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -18,9 +23,11 @@ public class JwtUtil {
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     private final JwtParser parser = Jwts.parserBuilder()
+            .deserializeJsonWith(new JacksonDeserializer<>(new ObjectMapper()))  // ✅ JSON 파싱기
             .setSigningKey(key)
-            .deserializeJsonWith(new JacksonSerializer<>())  // ✅ 직렬화기 명시적으로 지정
             .build();
+
+    private final Serializer<Map<String, ?>> serializer = new JacksonSerializer<>(new ObjectMapper());
 
     // JWT 생성
     public String generateToken(String userId) {
@@ -29,6 +36,7 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
+                .serializeToJsonWith(serializer)  // ✅ JSON 생성기
                 .compact();
     }
 
