@@ -30,7 +30,7 @@ public class AuthController {
                     request.get("user_id"),
                     request.get("password"),
                     request.get("nickname"),
-                    request.get("travelDestination"),
+                    request.get("travel_destination"),
                     request.get("airline")
             );
             return ResponseEntity.ok(user);

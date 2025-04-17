@@ -30,11 +30,11 @@ public class User {
     @Column(nullable = false)
     private String airline;
 
-    public User(String userId, String password, String nickname, String travelDestination, String airline) {
+    public User(String userId, String password, String nickname, String travel_destination, String airline) {
         this.userId = userId;
         this.password = password;
         this.nickname = nickname;
-        this.travel_destination = travelDestination;
+        this.travel_destination = travel_destination;
         this.airline = airline;
     }
 }

@@ -22,13 +22,13 @@ public class UserService {
     }
 
     // 회원가입
-    public User register(String userId, String password, String nickname, String travelDestination, String airline) {
+    public User register(String userId, String password, String nickname, String travel_destination, String airline) {
         if (userRepository.findByUserId(userId).isPresent()) {
             throw new RuntimeException("이미 존재하는 사용자 ID입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(userId, encodedPassword, nickname, travelDestination, airline);
+        User user = new User(userId, encodedPassword, nickname, travel_destination, airline);
         return userRepository.save(user);
     }
 
@@ -62,8 +62,8 @@ public class UserService {
         if (request.getNickname() != null) {
             user.setNickname(request.getNickname());
         }
-        if (request.getTravelDestination() != null) {
-            user.setTravelDestination(request.getTravelDestination());
+        if (request.getTravel_destination() != null) {
+            user.setTravel_destination(request.getTravel_destination());
         }
         if (request.getAirline() != null) {
             user.setAirline(request.getAirline());
