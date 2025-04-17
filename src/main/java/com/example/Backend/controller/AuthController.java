@@ -63,7 +63,7 @@ public class AuthController {
         UserResponseDTO dto = new UserResponseDTO(
                 user.getUserId(),
                 user.getNickname(),
-                user.getTravelDestination(),
+                user.getTravel_destination(),
                 user.getAirline()
         );
 
@@ -90,7 +90,7 @@ public class AuthController {
         UserResponseDTO dto = new UserResponseDTO(
                 updatedUser.getUserId(),
                 updatedUser.getNickname(),
-                updatedUser.getTravelDestination(),
+                updatedUser.getTravel_destination(),
                 updatedUser.getAirline()
         );
 

@@ -10,6 +10,6 @@ import lombok.Setter;
 public class UserResponseDTO {
     private String userId;
     private String nickname;
-    private String travelDestination;
+    private String travel_destination;
     private String airline;
 }

@@ -24,8 +24,8 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(name = "travelDestination", nullable = false)
-    private String travelDestination;
+    @Column(nullable = false)
+    private String travel_destination;
 
     @Column(nullable = false)
     private String airline;
@@ -34,7 +34,7 @@ public class User {
         this.userId = userId;
         this.password = password;
         this.nickname = nickname;
-        this.travelDestination = travelDestination;
+        this.travel_destination = travelDestination;
         this.airline = airline;
     }
 }
