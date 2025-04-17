@@ -8,11 +8,6 @@ import lombok.Setter;
 @Setter
 public class UserUpdateRequest {
 
-    @JsonProperty("user_id")
-    private String userId;
-
-    private String password;
-
     private String nickname;
 
     private String travelDestination;

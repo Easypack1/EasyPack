@@ -6,6 +6,7 @@ import com.example.Backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // ✅ 추가
 
 import java.util.Optional;
 
@@ -53,13 +54,11 @@ public class UserService {
     }
 
     // 🔧 회원정보 수정 기능
-    public void updateUserInfo(UserUpdateRequest request) {
-        User user = userRepository.findByUserId(request.getUserId())
+    @Transactional // ✅ 트랜잭션 보장
+    public void updateUserInfo(String userId, UserUpdateRequest request) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
         if (request.getNickname() != null) {
             user.setNickname(request.getNickname());
         }
@@ -71,5 +70,6 @@ public class UserService {
         }
 
         userRepository.save(user);
+        userRepository.flush(); // ✅ 즉시 DB 반영
     }
 }

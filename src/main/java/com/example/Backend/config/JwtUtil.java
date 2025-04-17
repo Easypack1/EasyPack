@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ public class JwtUtil {
     private static final String SECRET_KEY = "EasyPackSecretKeyEasyPackSecretKeyEasyPackSecretKey123!";
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     // JWT 생성
     public String generateToken(String userId) {
@@ -42,14 +43,14 @@ public class JwtUtil {
     // 토큰 유효성 검사
     public boolean isTokenValid(String token) {
         try {
-            extractClaims(token); // 예외 발생 시 유효하지 않음
+            extractClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    // ✅ [추가] 토큰 검증 및 userId 반환
+    // 유효성 검사 후 userId 반환
     public String validateTokenAndGetUserId(String token) {
         if (!isTokenValid(token)) {
             throw new RuntimeException("유효하지 않은 토큰입니다.");
