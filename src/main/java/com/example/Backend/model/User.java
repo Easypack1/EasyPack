@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(name = "travelDestination", nullable = false)
     private String travelDestination;
 
     @Column(nullable = false)
