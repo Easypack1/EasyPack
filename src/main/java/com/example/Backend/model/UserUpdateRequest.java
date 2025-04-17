@@ -10,7 +10,6 @@ public class UserUpdateRequest {
 
     private String nickname;
 
-
     private String travelDestination;
 
     private String airline;
