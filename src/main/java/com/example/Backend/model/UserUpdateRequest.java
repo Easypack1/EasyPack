@@ -15,7 +15,6 @@ public class UserUpdateRequest {
 
     private String nickname;
 
-    @JsonProperty("travel_destination")
     private String travelDestination;
 
     private String airline;
