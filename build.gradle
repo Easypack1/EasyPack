@@ -2,9 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.3'
-
-	// ✅ ShadowJar 플러그인 추가
-	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'com.example'
@@ -20,20 +17,27 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// ✅ Jackson
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
 
-	// ✅ Spring & 기타 의존성
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-	implementation 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
+	// ✅ Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// ✅ 테스트
+	// ✅ MySQL
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// ✅ Lombok
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// ✅ OpenAPI
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+	// ✅ Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -41,12 +45,28 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// ✅ Spring Boot의 기본 bootJar 비활성화 (shadowJar만 사용)
 bootJar {
+	enabled = true
+}
+
+jar {
 	enabled = false
 }
 
-// ✅ shadowJar 설정: META-INF/services 병합
-shadowJar {
-	mergeServiceFiles()
+// ✅ ShadowJar 플러그인은 필요한 경우에만 실행할 수 있도록 설정
+if (project.hasProperty('enableShadow')) {
+	apply plugin: 'com.github.johnrengelman.shadow'
+
+	dependencies {
+		// ShadowJar는 lombok 필요시 annotationProcessor를 명시적으로 중복 선언해줘야 함
+		annotationProcessor 'org.projectlombok:lombok'
+	}
+
+	bootJar {
+		enabled = false
+	}
+
+	shadowJar {
+		mergeServiceFiles()
+	}
 }
