@@ -58,7 +58,6 @@ if (project.hasProperty('enableShadow')) {
 	apply plugin: 'com.github.johnrengelman.shadow'
 
 	dependencies {
-		// ShadowJar는 lombok 필요시 annotationProcessor를 명시적으로 중복 선언해줘야 함
 		annotationProcessor 'org.projectlombok:lombok'
 	}
 
